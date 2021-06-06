@@ -46,7 +46,6 @@ class SelectLocationFragment : BaseFragment() {
 
         setHasOptionsMenu(true)
         setDisplayHomeAsUpEnabled(true)
-
 //        TODO: add the map setup implementation
 //        TODO: zoom to the user location after taking his permission
 //        TODO: add style to the map

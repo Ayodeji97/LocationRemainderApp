@@ -49,6 +49,7 @@ dependencies {
 
     // firebase authentication
     implementation 'com.firebaseui:firebase-ui-auth:7.1.1'
+  //  implementation 'com.google.firebase:firebase-auth:21.0.1'
 
     implementation "androidx.cardview:cardview:$cardVersion"
     implementation "com.google.android.material:material:$materialVersion"
