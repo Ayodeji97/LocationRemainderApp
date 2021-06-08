@@ -10,7 +10,9 @@ import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingEvent
 import com.udacity.project4.R
 import com.udacity.project4.authentication.AuthenticationActivity.Companion.TAG
-import com.udacity.project4.locationreminders.savereminder.SaveReminderFragment.Companion.ACTION_GEOFENCE_EVENT
+import com.udacity.project4.locationreminders.geofence.GeoFenceConstants.ACTION_GEOFENCE_EVENT
+
+//import com.udacity.project4.locationreminders.savereminder.SaveReminderFragment.Companion.ACTION_GEOFENCE_EVENT
 
 /**
  * Triggered by the Geofence.  Since we can have many Geofences at once, we pull the request
@@ -28,6 +30,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
 //TODO: implement the onReceive method to receive the geofencing events at the background
 
         if (intent.action == ACTION_GEOFENCE_EVENT) {
+            Log.i("SEARCHHH", "RRRRRRRR")
             GeofenceTransitionsJobIntentService.enqueueWork(context, intent)
         }
 

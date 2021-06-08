@@ -46,7 +46,10 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
             return
         }
 
+        Log.i("BEFFOREEEE", "YYYYY")
         if (geofencingEvent.geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
+
+            Log.i("CHECK_NOTIFICATION", "ENTEREDDDDD")
 
             Log.v(TAG, applicationContext.getString(R.string.geofence_entered))
 

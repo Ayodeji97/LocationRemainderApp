@@ -42,15 +42,15 @@ class AuthenticationActivity : AppCompatActivity() {
         )
 
 
-        if (auth.currentUser != null) {
-
-            // Already signed
-            val intent = Intent(this, RemindersActivity::class.java)
-            startActivity(intent)
-
-        } else {
-            launchSignInFlow()
-        }
+//        if (auth.currentUser != null) {
+//
+//            // Already signed
+//            val intent = Intent(this, RemindersActivity::class.java)
+//            startActivity(intent)
+//
+//        } else {
+//            launchSignInFlow()
+//        }
 
         binding.authenticateUserButton.setOnClickListener { launchSignInFlow() }
 //         TODO: Implement the create account and sign in using FirebaseUI, use sign in using email and sign in using Google

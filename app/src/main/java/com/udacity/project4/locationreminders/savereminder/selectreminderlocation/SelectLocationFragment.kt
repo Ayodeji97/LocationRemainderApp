@@ -194,7 +194,10 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
         map.setOnPoiClickListener {pointOfInterest ->
             map.clear()
+
             poi = pointOfInterest
+            Log.i("PIONTTTT", "$poi")
+            Log.i("SWWWWWWW", "${pointOfInterest.latLng}")
             val poiMaker = map.addMarker(
                 MarkerOptions().position(pointOfInterest.latLng)
                     .title(pointOfInterest.name)
