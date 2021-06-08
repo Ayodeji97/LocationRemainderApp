@@ -54,8 +54,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         setHasOptionsMenu(true)
         setDisplayHomeAsUpEnabled(true)
 
-        // Construct a FusedLocationProviderClient.
-        //fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
 
         var  mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
