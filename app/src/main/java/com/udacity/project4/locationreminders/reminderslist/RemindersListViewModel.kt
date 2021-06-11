@@ -19,6 +19,7 @@ class RemindersListViewModel(
     /**
      * Get all the reminders from the DataSource and add them to the remindersList to be shown on the UI,
      * or show error if any
+     * todo : Test if the loading status appear before data appears
      */
     fun loadReminders() {
         showLoading.value = true
@@ -53,6 +54,8 @@ class RemindersListViewModel(
 
     /**
      * Inform the user that there's not any data if the remindersList is empty
+     *
+     * todo : Check of the show no data view get displayed before
      */
     private fun invalidateShowNoData() {
         showNoData.value = remindersList.value == null || remindersList.value!!.isEmpty()

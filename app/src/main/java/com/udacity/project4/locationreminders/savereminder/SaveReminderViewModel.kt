@@ -24,6 +24,8 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
 
     /**
      * Clear the live data objects to start fresh next time the view model gets called
+     *
+     * Todo : check if test was cleared on call on [onClear]
      */
     fun onClear() {
         reminderTitle.value = null
@@ -36,6 +38,8 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
 
     /**
      * Validate the entered data then saves the reminder data to the DataSource
+     *
+     * TODO : Write test to assert that remainder was saved either of the two
      */
     fun validateAndSaveReminder(reminderData: ReminderDataItem) : Boolean {
         if (validateEnteredData(reminderData)) {
@@ -48,6 +52,8 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
 
     /**
      * Save the reminder to the data source
+     *
+     * TODO : Write test to assert that remainder was saved
      */
     fun saveReminder(reminderData: ReminderDataItem) {
         showLoading.value = true
@@ -70,6 +76,8 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
 
     /**
      * Validate the entered data and show error to the user if there's any invalid data
+     *
+     * TODO : Write unit test to validate if snack bar shows when no input from user
      */
     fun validateEnteredData(reminderData: ReminderDataItem): Boolean {
         if (reminderData.title.isNullOrEmpty()) {

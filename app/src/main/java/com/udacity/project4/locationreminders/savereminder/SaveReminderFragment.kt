@@ -42,6 +42,9 @@ private const val TAG = "SaveRemainderFragment"
 private const val LOCATION_PERMISSION_INDEX = 0
 private const val BACKGROUND_LOCATION_PERMISSION_INDEX = 1
 
+/**
+ *
+ * */
 
 class SaveReminderFragment : BaseFragment() {
     //Get the view model this time as a single to be shared with the another fragment
@@ -280,6 +283,7 @@ class SaveReminderFragment : BaseFragment() {
         }
     }
 
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_TURN_DEVICE_LOCATION_ON) {
@@ -335,22 +339,18 @@ class SaveReminderFragment : BaseFragment() {
                                 if ((it.message != null)) {
                                     Log.w("MESSAGEEEEEEEEEE", it.message!!)
                                 }
-
-
                             }
                         }
                     }
 
 
-                } }
-
-
+                }
+            }
         }
 
     override fun onDestroy() {
         super.onDestroy()
         //make sure to clear the view model after destroy, as it's a single view model.
-        //removeGeofences()
         _viewModel.onClear()
     }
 
