@@ -84,8 +84,6 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
     }
 
 
-
-//    TODO: test the navigation of the fragments.
     @Test
     fun click_add_button_navigate_to_edit_text () {
 
@@ -108,7 +106,6 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
 
     }
 
-//    TODO: test the displayed data on the UI.
 
     @Test
     fun confirm_ui_display_data_on_screen () {
@@ -128,7 +125,6 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
         onView(withText(reminder.location)).check(matches(isDisplayed()))
 
     }
-//    TODO: add testing for the error messages.
 
     @Test
     fun confirm_ui_display_empty_error () {
