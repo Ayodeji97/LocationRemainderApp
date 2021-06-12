@@ -54,7 +54,7 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
             Log.v(TAG, applicationContext.getString(R.string.geofence_entered))
 
             //TODO call @sendNotification
-            sendNotification(geofencingEvent.triggeringGeofences)
+          //  sendNotification(geofencingEvent.triggeringGeofences)
         }
         // send a notification to the user when he enters the geofence area
 
