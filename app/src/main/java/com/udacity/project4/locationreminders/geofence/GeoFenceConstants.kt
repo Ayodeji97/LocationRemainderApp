@@ -5,6 +5,9 @@ import com.google.android.gms.location.GeofenceStatusCodes
 import com.udacity.project4.R
 import java.util.concurrent.TimeUnit
 
+/**
+ * Created by Daniel
+ * */
 internal object GeoFenceConstants{
     const val GEOFENCE_RADIUS_IN_METERS = 100f
     const val ACTION_GEOFENCE_EVENT =

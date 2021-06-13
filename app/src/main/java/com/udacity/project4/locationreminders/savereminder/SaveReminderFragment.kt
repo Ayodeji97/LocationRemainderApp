@@ -43,7 +43,7 @@ private const val LOCATION_PERMISSION_INDEX = 0
 private const val BACKGROUND_LOCATION_PERMISSION_INDEX = 1
 
 /**
- *
+ * Created by Daniel
  * */
 
 class SaveReminderFragment : BaseFragment() {

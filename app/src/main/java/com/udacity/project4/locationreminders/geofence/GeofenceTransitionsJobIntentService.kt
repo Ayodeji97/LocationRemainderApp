@@ -5,6 +5,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.core.app.JobIntentService
 import com.google.android.gms.location.Geofence
+import com.google.android.gms.location.GeofenceStatusCodes
 import com.google.android.gms.location.GeofencingEvent
 import com.udacity.project4.R
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
@@ -16,6 +17,9 @@ import kotlinx.coroutines.*
 import org.koin.android.ext.android.inject
 import kotlin.coroutines.CoroutineContext
 
+/**
+ * Worked on by Daniel
+ * */
 class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
 
     private var coroutineJob: Job = Job()
@@ -36,28 +40,23 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
         }
     }
 
+
+
     override fun onHandleWork(intent: Intent) {
-        //TODO: handle the geofencing transition events and
-        val geofencingEvent = GeofencingEvent.fromIntent(intent)
+        if (intent.action == GeoFenceConstants.ACTION_GEOFENCE_EVENT) {
+            val geofencingEvent = GeofencingEvent.fromIntent(intent)
 
-        if (geofencingEvent.hasError()) {
-            val errorMessage = errorMessage(applicationContext, geofencingEvent.errorCode)
-            Log.e(TAG, errorMessage)
-            return
+            if (geofencingEvent.hasError()) {
+                val errorMessage = GeofenceStatusCodes.getStatusCodeString(geofencingEvent.errorCode)
+                Log.e("SEEEEE", errorMessage)
+                return
+            }
+
+            if (geofencingEvent.geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
+                sendNotification(geofencingEvent.triggeringGeofences)
+                Log.d("DANIEL", "Geofence found")
+            }
         }
-
-        Log.i("BEFFOREEEE", "YYYYY")
-        if (geofencingEvent.geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
-
-            Log.i("CHECK_NOTIFICATION", "ENTEREDDDDD")
-
-            Log.v(TAG, applicationContext.getString(R.string.geofence_entered))
-
-            //TODO call @sendNotification
-          sendNotification(geofencingEvent.triggeringGeofences)
-        }
-        // send a notification to the user when he enters the geofence area
-
     }
 
     //TODO: get the request id of the current geofence
@@ -69,7 +68,7 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
                 triggeringGeofences[0].requestId
             }
             else -> {
-                Log.i("NO GEOFENCE","No Triggering Geofence Found")
+                Log.i("NO_GEOFENCE","No Triggering Geofence Found")
                 return
             }
         }
