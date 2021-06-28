@@ -62,7 +62,7 @@ class SaveReminderFragment : BaseFragment() {
      * Peending Geofence intent to handle geofence transition
      * */
     private val geofencePendingIntent: PendingIntent by lazy {
-        val intent = Intent(requireActivity(), GeofenceBroadcastReceiver::class.java)
+        val intent = Intent(requireContext(), GeofenceBroadcastReceiver::class.java)
         intent.action = ACTION_GEOFENCE_EVENT
         PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
@@ -109,7 +109,7 @@ class SaveReminderFragment : BaseFragment() {
 
             if (_viewModel.validateAndSaveReminder(reminderData)) {
                 checkPermissionsAndStartGeofencing()
-                //addGeoFenceForRemainder()
+               // addGeoFenceForRemainder()
             }
 
 
