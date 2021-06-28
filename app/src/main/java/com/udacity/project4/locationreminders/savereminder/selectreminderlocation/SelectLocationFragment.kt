@@ -87,12 +87,12 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
         // Adding overlay
 
-        val androidOverlay = GroundOverlayOptions()
-            .image(BitmapDescriptorFactory.fromResource(R.drawable.android_img))
-            .position(homeLatLong, overlaySize)
+//        val androidOverlay = GroundOverlayOptions()
+//            .image(BitmapDescriptorFactory.fromResource(R.drawable.android_img))
+//            .position(homeLatLong, overlaySize)
 
         map.addMarker(MarkerOptions().position(homeLatLong))
-        map.addGroundOverlay(androidOverlay)
+      //  map.addGroundOverlay(androidOverlay)
 
 //        TODO: zoom to the user location after taking his permission
             enableMyLocation()
