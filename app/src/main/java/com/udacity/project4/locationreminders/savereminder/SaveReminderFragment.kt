@@ -303,6 +303,8 @@ class SaveReminderFragment : BaseFragment() {
 
             val currentGeoFenceData = reminderData
 
+            Log.i("CURRENT_DATA", "$currentGeoFenceData")
+
             /**
              * Geo fence builder
              * */
