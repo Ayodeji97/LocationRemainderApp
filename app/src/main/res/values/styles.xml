@@ -8,4 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="TextStyle"  parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
 </resources>
