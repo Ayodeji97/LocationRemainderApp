@@ -332,7 +332,7 @@ class SaveReminderFragment : BaseFragment() {
 
                             addOnSuccessListener {
                                 Log.i("ADDDEDDD", "Geofence added with id ${currentGeoFenceData.id}")
-                              //  Toast.makeText(requireActivity(), "Geofence Added", Toast.LENGTH_LONG).show()
+                              Toast.makeText(requireActivity(), "Geofence Added", Toast.LENGTH_LONG).show()
                             }
 
                             addOnFailureListener {

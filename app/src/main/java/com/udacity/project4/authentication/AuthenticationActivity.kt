@@ -42,34 +42,19 @@ class AuthenticationActivity : AppCompatActivity() {
         )
 
 
-//        if (auth.currentUser != null) {
-//
-//            // Already signed
-//            val intent = Intent(this, RemindersActivity::class.java)
-//            startActivity(intent)
-//
-//        } else {
-//            launchSignInFlow()
-//        }
-
         binding.authenticateUserButton.setOnClickListener { launchSignInFlow() }
-//         TODO: Implement the create account and sign in using FirebaseUI, use sign in using email and sign in using Google
 
-
-
-
-
-//          TODO: If the user was authenticated, send him to RemindersActivity
-
-//          TODO: a bonus is to customize the sign in flow to look nice using :
         //https://github.com/firebase/FirebaseUI-Android/blob/master/auth/README.md#custom-layout
 
     }
 
+    /**
+     * Check if user as sign in successfully
+     * */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        // check if the user as sig in in successfully
+        // check if the user as sign in in successfully
         if (requestCode == SIGN_IN_REQUEST_CODE) {
 
             val response = IdpResponse.fromResultIntent(data)
@@ -91,6 +76,9 @@ class AuthenticationActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Firebase auth ui
+     * */
     private fun launchSignInFlow() {
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build(), AuthUI.IdpConfig.GoogleBuilder().build()
@@ -101,6 +89,7 @@ class AuthenticationActivity : AppCompatActivity() {
             AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
+                    .setLogo(R.drawable.map)
                 .setIsSmartLockEnabled(false)
                 .build(),
             SIGN_IN_REQUEST_CODE

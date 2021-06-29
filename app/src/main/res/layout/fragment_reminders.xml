@@ -10,6 +10,7 @@
             type="com.udacity.project4.locationreminders.reminderslist.RemindersListViewModel" />
     </data>
 
+<!--    Swipe to refresh layout -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"

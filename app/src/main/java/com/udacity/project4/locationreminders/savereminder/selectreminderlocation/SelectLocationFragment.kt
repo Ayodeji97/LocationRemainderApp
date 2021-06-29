@@ -61,8 +61,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
         var  mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-
-//        TODO: call this function after the user confirms on the selected location
         onLocationSelected()
 
         return binding.root
@@ -94,11 +92,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         map.addMarker(MarkerOptions().position(homeLatLong))
       //  map.addGroundOverlay(androidOverlay)
 
-//        TODO: zoom to the user location after taking his permission
             enableMyLocation()
-//        TODO: add style to the map
             setMapStyle(map)
-//        TODO: put a marker to location that the user selected
+
             setMapLongClick(map)
             setPoiClick(map)
 
@@ -108,7 +104,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     }
 
 
-
+/**
+ * On point of interest selected navigate back to previous screen
+ * */
     private fun onLocationSelected() {
         //        TODO: When the user confirms on the selected location,
         binding.positionClick.setOnClickListener {
@@ -134,7 +132,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     /**
-     * ToDO : Test if the item menu appear on click of menu icon.
+     *   item menu appear on click of menu icon.
      * */
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         // TODO: Change the map type based on the user's selection.
@@ -158,7 +156,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     }
 
 
-
+/**
+ * Enable location if user grant permission
+ * */
     private fun enableMyLocation() {
         if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) ==
             PackageManager.PERMISSION_GRANTED &&
@@ -177,6 +177,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     }
 
 
+    /**
+     * Check if user grant permission and enable location
+     * */
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -198,8 +201,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             map.clear()
 
             poi = pointOfInterest
-            Log.i("PIONTTTT", "$poi")
-            Log.i("SWWWWWWW", "${pointOfInterest.latLng}")
+//            Log.i("PIONTTTT", "$poi")
+//            Log.i("SWWWWWWW", "${pointOfInterest.latLng}")
             val poiMaker = map.addMarker(
                 MarkerOptions().position(pointOfInterest.latLng)
                     .title(pointOfInterest.name)
@@ -210,6 +213,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     }
 
 
+    /**
+     * Set long click on map
+     * */
     private fun setMapLongClick (map : GoogleMap) {
 
         map.setOnMapLongClickListener { latLng ->
