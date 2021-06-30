@@ -1,6 +1,7 @@
 package com.udacity.project4.locationreminders.geofence
 
 import android.content.Context
+import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofenceStatusCodes
 import com.udacity.project4.R
 import java.util.concurrent.TimeUnit
@@ -12,7 +13,8 @@ internal object GeoFenceConstants{
     const val GEOFENCE_RADIUS_IN_METERS = 500f
     const val ACTION_GEOFENCE_EVENT =
             "ACTION_GEOFENCE_EVENT"
-   val GEOFENCE_EXPIRATION_IN_MILLISECONDS: Long = TimeUnit.HOURS.toMillis(1)
+
+    const val NEVER_EXPIRES = Geofence.NEVER_EXPIRE
 }
 
 

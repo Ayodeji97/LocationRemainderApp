@@ -59,7 +59,7 @@ class SaveReminderFragment : BaseFragment() {
     private val runningQOrLater = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q
 
     /**
-     * Peending Geofence intent to handle geofence transition
+     * Pending Geofence intent to handle geofence transition
      * */
     private val geofencePendingIntent: PendingIntent by lazy {
         val intent = Intent(requireContext(), GeofenceBroadcastReceiver::class.java)
@@ -105,23 +105,12 @@ class SaveReminderFragment : BaseFragment() {
 
          reminderData = ReminderDataItem(title, description, location, latitude, longitude)
 
-          // _viewModel.validateAndSaveReminder(reminderData)
 
-            if (_viewModel.validateAndSaveReminder(reminderData)) {
-                checkPermissionsAndStartGeofencing()
-               // addGeoFenceForRemainder()
-            }
+            /**
+             * Only save reminder to local database only when geofence is successful
+             * */
+            addGeoFenceForRemainder()
 
-
-
-
-
-
-
-
-//            TODO: use the user entered reminder details to:
-//             1) add a geofencing request
-//             2) save the reminder to the local db
         }
 
     }
@@ -168,12 +157,11 @@ class SaveReminderFragment : BaseFragment() {
             else -> REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
         }
         Log.d(TAG, "Request foreground only location permission")
-        ActivityCompat.requestPermissions(
-                requireActivity(),
+        requestPermissions(
                 permissionsArray,
-                resultCode
+               resultCode
         )
-    }
+    } // make changes to
 
     override fun onStart() {
         super.onStart()
@@ -240,8 +228,11 @@ class SaveReminderFragment : BaseFragment() {
         locationSettingsResponseTask.addOnFailureListener { exception ->
             if (exception is ResolvableApiException && resolve){
                 try {
-                    exception.startResolutionForResult(requireActivity(),
-                            REQUEST_TURN_DEVICE_LOCATION_ON)
+//                    exception.startResolutionForResult(requireActivity(),
+//                            REQUEST_TURN_DEVICE_LOCATION_ON)
+                    startIntentSenderForResult(exception.resolution.intentSender, REQUEST_TURN_DEVICE_LOCATION_ON,
+                            null, 0,0,0, null)
+
                 } catch (sendEx: IntentSender.SendIntentException) {
                     Log.d(TAG, "Error getting location settings resolution: " + sendEx.message)
                 }
@@ -314,7 +305,7 @@ class SaveReminderFragment : BaseFragment() {
                             currentGeoFenceData.longitude!!,
                             GeoFenceConstants.GEOFENCE_RADIUS_IN_METERS
                     )
-                    .setExpirationDuration(GeoFenceConstants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+                    .setExpirationDuration(GeoFenceConstants.NEVER_EXPIRES)
                     .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
                     .build()
 
@@ -324,29 +315,32 @@ class SaveReminderFragment : BaseFragment() {
                     .build()
 
 
-                geofencingClient.removeGeofences(geofencePendingIntent)?.run {
+//                geofencingClient.removeGeofences(geofencePendingIntent)?.run {
 
-                    addOnCompleteListener {
+
+//                    addOnCompleteListener {
 
                         geofencingClient.addGeofences(geofencingRequest, geofencePendingIntent)?.run {
 
                             addOnSuccessListener {
-                                Log.i("ADDDEDDD", "Geofence added with id ${currentGeoFenceData.id}")
-                              //Toast.makeText(requireContext(), "Geofence Added", Toast.LENGTH_LONG).show()
+                              //  Log.i("ADDDEDDD", "Geofence added with id ${currentGeoFenceData.id}")
+                                _viewModel.validateAndSaveReminder(reminderData)
                             }
 
                             addOnFailureListener {
 
                                 Log.i("FAILURE", "Geofence FAILURE")
+
+                                Toast.makeText(requireContext(), "Failed to add location!!! Try again later!", Toast.LENGTH_LONG).show()
+
                                 if ((it.message != null)) {
                                     Log.w("MESSAGE", it.message!!)
                                 }
                             }
                         }
-                    }
+                  //  }
 
-
-                }
+              //  }
             }
         }
 

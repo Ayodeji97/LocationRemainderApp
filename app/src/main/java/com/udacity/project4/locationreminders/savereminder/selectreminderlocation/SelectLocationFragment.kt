@@ -4,7 +4,9 @@ package com.udacity.project4.locationreminders.savereminder.selectreminderlocati
 import android.Manifest
 import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.graphics.Color
 import android.os.Bundle
+import android.text.method.TextKeyListener.clear
 import android.util.Log
 import android.view.*
 import android.widget.Toast
@@ -37,7 +39,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     private lateinit var map : GoogleMap
     private val REQUEST_LOCATION_PERMISSION = 1
     private lateinit var poi: PointOfInterest
-
+    // NB : this is hard coded, you should be getting the value instead from the user
+    private val GEOFENCE_RADIUS = 50f
 
     // The entry point to the Fused Location Provider.
    // private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -94,6 +97,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
             enableMyLocation()
             setMapStyle(map)
+
 
             setMapLongClick(map)
             setPoiClick(map)
@@ -226,14 +230,32 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                 latLng.latitude,
                 latLng.longitude
             )
-
+//            map.clear()
             map.addMarker(
                 MarkerOptions().position(latLng)
                     .title(getString(R.string.dropped_pin))
                     .snippet(snippet)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
             )
+
+            //addCircle(latLng, GEOFENCE_RADIUS)
         }
+    }
+
+/**
+ * Add circle
+ * */
+    private fun addCircle (latLng: LatLng, radius: Float) {
+
+        val circleOptions = CircleOptions()
+
+        circleOptions.center(latLng)
+        circleOptions.radius(radius.toDouble())
+        circleOptions.strokeColor(Color.GREEN)
+        circleOptions.fillColor(Color.alpha(R.color.colorPrimary))
+        circleOptions.strokeWidth(4F)
+
+        map.addCircle(circleOptions)
     }
 
 
