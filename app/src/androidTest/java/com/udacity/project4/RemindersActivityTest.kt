@@ -151,10 +151,15 @@ class RemindersActivityTest :
 
         onView(withId(R.id.reminderTitle)).perform(typeText("Title"))
         onView(withId(R.id.reminderDescription)).perform(typeText("Description"))
+
         onView(withId(R.id.selectLocation)).perform(click())
         onView(withId(R.id.map)).perform(longClick())
 
-         onView(withId(R.id.saveReminder)).perform(longClick())
+        onView(withId(R.id.position_click)).perform(longClick())
+
+
+
+         onView(withId(R.id.saveReminder)).perform(click())
 
         onView(withText("Title")).check(matches(isDisplayed()))
         onView(withText("Description")).check(matches(isDisplayed()))
