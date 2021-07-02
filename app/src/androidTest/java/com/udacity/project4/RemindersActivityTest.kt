@@ -7,8 +7,7 @@ import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -148,31 +147,30 @@ class RemindersActivityTest :
         onView(withId(R.id.reminderDescription)).perform(typeText("Description"))
         onView(withId(R.id.selectLocation)).perform(click())
 
-        onView(withId(R.id.map)).perform(click())
+        onView(withId(R.id.map)).perform(longClick())
 
-        onView(withId(R.id.position_click)).perform(click())
+        onView(withId(R.id.position_click)).perform(longClick())
 
-        Espresso.pressBack()
+//       Espresso.pressBack()
 
        onView(withId(R.id.saveReminder)).perform(click())
-
 
 
         onView(withText("Title")).check(matches(isDisplayed()))
         onView(withText("Description")).check(matches(isDisplayed()))
 
-       onView(withText(R.string.reminder_saved)).inRoot(withDecorView(not(getActivity(activityScenario)!!.window.decorView))).check(matches(isDisplayed()))
+        onView(withText(R.string.reminder_saved)).inRoot(withDecorView(not(getActivity(activityScenario)!!.window.decorView))).check(matches(isDisplayed()))
 
 //
 //        onView(withText(R.string.reminder_saved)).inRoot(withDecorView(not(`is`(getActivity(activityScenario)?.window?.decorView)))).check(matches(isDisplayed()))
-//
+////
         onView(withId(com.google.android.material.R.id.snackbar_text))
                 .check(matches(withText(R.string.err_enter_title)))
 
 
         onView(withId(com.google.android.material.R.id.snackbar_text))
                 .check(matches(withText(R.string.err_select_location)))
-
+//
 
         //close the activity before resetting the db
         activityScenario.close()
