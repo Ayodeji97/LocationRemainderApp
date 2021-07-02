@@ -61,18 +61,30 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
     }
 
 
+    private lateinit var requestId : String
    // Send notification with the current geofence id
     private fun sendNotification(triggeringGeofences: List<Geofence>) {
 
-        val requestId = when {
-            triggeringGeofences.isNotEmpty() -> {
-                triggeringGeofences[0].requestId
-            }
-            else -> {
-                Log.i("NO_GEOFENCE","No Triggering Geofence Found")
+//        val requestId = when {
+//            triggeringGeofences.isNotEmpty() -> {
+//                triggeringGeofences[0].requestId
+//            }
+//            else -> {
+//                Log.i("NO_GEOFENCE","No Triggering Geofence Found")
+//                return
+//            }
+//        }
+
+       for (i in triggeringGeofences.indices) {
+
+           if (triggeringGeofences.isNotEmpty()) {
+               requestId = triggeringGeofences[i].requestId
+           } else {
+
+               Log.i("NO_GEOFENCE","No Triggering Geofence Found")
                 return
-            }
-        }
+           }
+       }
 
 
 
