@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
  * Created by Daniel
  * */
 internal object GeoFenceConstants{
-    const val GEOFENCE_RADIUS_IN_METERS = 500f
+    const val GEOFENCE_RADIUS_IN_METERS = 100f
     const val ACTION_GEOFENCE_EVENT =
             "ACTION_GEOFENCE_EVENT"
 

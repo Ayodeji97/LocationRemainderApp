@@ -60,9 +60,9 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
         }
     }
 
+
    // Send notification with the current geofence id
     private fun sendNotification(triggeringGeofences: List<Geofence>) {
-        //val requestId = triggeringGeofences[0].requestId
 
         val requestId = when {
             triggeringGeofences.isNotEmpty() -> {

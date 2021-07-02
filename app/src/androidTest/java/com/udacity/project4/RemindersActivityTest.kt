@@ -1,5 +1,6 @@
 package com.udacity.project4
 
+import android.app.Activity
 import android.app.Application
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
@@ -9,9 +10,12 @@ import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import androidx.test.rule.ActivityTestRule
 import com.udacity.project4.locationreminders.RemindersActivity
 import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
@@ -22,6 +26,8 @@ import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 
 import com.udacity.project4.utils.EspressoIdlingResource
 import kotlinx.coroutines.runBlocking
+import org.hamcrest.CoreMatchers.not
+import org.hamcrest.core.Is.`is`
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -110,6 +116,16 @@ class RemindersActivityTest :
 //    }
 
 
+    // get activity context
+    private fun getActivity(activityScenario: ActivityScenario<RemindersActivity>): Activity? {
+        var activity: Activity? = null
+        activityScenario.onActivity {
+            activity = it
+        }
+        return activity
+    }
+
+
 //    TODO: add End to End testing to the app
 
     @Test
@@ -122,6 +138,7 @@ class RemindersActivityTest :
 
         // Start up reminder screen
         val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
+
 
       //  dataBindingIdlingResource.monitorActivity(activityScenario)
 
@@ -137,13 +154,24 @@ class RemindersActivityTest :
 
         Espresso.pressBack()
 
-        onView(withId(R.id.saveReminder)).perform(click())
+       onView(withId(R.id.saveReminder)).perform(click())
+
+
 
         onView(withText("Title")).check(matches(isDisplayed()))
         onView(withText("Description")).check(matches(isDisplayed()))
 
+       onView(withText(R.string.reminder_saved)).inRoot(withDecorView(not(getActivity(activityScenario)!!.window.decorView))).check(matches(isDisplayed()))
+
+//
+//        onView(withText(R.string.reminder_saved)).inRoot(withDecorView(not(`is`(getActivity(activityScenario)?.window?.decorView)))).check(matches(isDisplayed()))
+//
+        onView(withId(com.google.android.material.R.id.snackbar_text))
+                .check(matches(withText(R.string.err_enter_title)))
 
 
+        onView(withId(com.google.android.material.R.id.snackbar_text))
+                .check(matches(withText(R.string.err_select_location)))
 
 
         //close the activity before resetting the db

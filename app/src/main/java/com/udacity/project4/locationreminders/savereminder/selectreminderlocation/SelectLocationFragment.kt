@@ -2,9 +2,13 @@ package com.udacity.project4.locationreminders.savereminder.selectreminderlocati
 
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Color
+import android.location.Address
+import android.location.Geocoder
+import android.location.Location
 import android.os.Bundle
 import android.text.method.TextKeyListener.clear
 import android.util.Log
@@ -14,6 +18,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -31,19 +36,34 @@ import java.util.*
 /**
  * Created by Daniel
  * */
-class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
+class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
     //Use Koin to get the view model of the SaveReminder
     override val _viewModel: SaveReminderViewModel by inject()
     private lateinit var binding: FragmentSelectLocationBinding
+
     private lateinit var map : GoogleMap
     private val REQUEST_LOCATION_PERMISSION = 1
     private lateinit var poi: PointOfInterest
+    private lateinit var fromCurrentLocation : List<Address>
+
+    private val zoomLevel = 15f
+
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private lateinit var defaultLocation : LatLng
+    private var lastKnownLocation : Location? = null
+    private var selectedMarker : Marker? = null
+  //  private lateinit var locationName : String
+
+    private var isLocationPermissionGranted = false
+
+
+
     // NB : this is hard coded, you should be getting the value instead from the user
     private val GEOFENCE_RADIUS = 50f
 
     // The entry point to the Fused Location Provider.
-   // private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -55,6 +75,11 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         binding.lifecycleOwner = this
 
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+
+        // change soon
+        defaultLocation = LatLng(-33.8523341, 151.2106085)
+
 
 
         setHasOptionsMenu(true)
@@ -62,9 +87,12 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
 
 
+
+
         var  mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-        onLocationSelected()
+
+       // getUserLocation()
 
         return binding.root
     }
@@ -73,62 +101,71 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap : GoogleMap) {
 
         map = googleMap
-
         setMapStyle(map)
 
-        val latitude =  6.690697
-        val longitude = 3.245417
 
-        val zoomLevel = 18f
-        val overlaySize = 100f
-
-        val homeLatLong = LatLng(latitude, longitude)
-
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLong, zoomLevel))
-
-        // Adding overlay
-
-//        val androidOverlay = GroundOverlayOptions()
-//            .image(BitmapDescriptorFactory.fromResource(R.drawable.android_img))
-//            .position(homeLatLong, overlaySize)
-
-        map.addMarker(MarkerOptions().position(homeLatLong))
-      //  map.addGroundOverlay(androidOverlay)
-
-            enableMyLocation()
-            setMapStyle(map)
-
-
-            setMapLongClick(map)
-            setPoiClick(map)
-
-
+        enableMyLocation()
+        getUserLocation()
+        setPoiClick(map)
+        map.setOnMapLongClickListener(this)
 
 
     }
 
 
-/**
+
+
+
+    override fun onMapLongClick(latLng: LatLng) {
+        selectedMarker?.remove()
+        selectedMarker?.position = latLng
+
+        map.addMarker(MarkerOptions().position(latLng)).also {
+            selectedMarker = it
+
+        }
+
+        map.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+
+        onLocationSelected(latLng)
+
+    }
+
+
+
+    /**
  * On point of interest selected navigate back to previous screen
  * */
-    private fun onLocationSelected() {
+    private fun onLocationSelected(latLng: LatLng) {
         //        TODO: When the user confirms on the selected location,
+
+       val fromLocation = Geocoder(activity).getFromLocation(latLng.latitude, latLng.longitude, 2)
         binding.positionClick.setOnClickListener {
 
-            if (this::poi.isInitialized) {
 
+            if (this::poi.isInitialized) {
                 _viewModel.latitude.value = poi.latLng.latitude
                 _viewModel.longitude.value = poi.latLng.longitude
                 _viewModel.reminderSelectedLocationStr.value = poi.name
                 _viewModel.selectedPOI.value = poi
-               _viewModel.navigationCommand.value = NavigationCommand.Back
-            } else {
-                Toast.makeText(requireContext(), "Please select a location", Toast.LENGTH_SHORT).show()
+                _viewModel.navigationCommand.value = NavigationCommand.Back
+
             }
+            else {
+                _viewModel.latitude.value = latLng.latitude
+                _viewModel.longitude.value = latLng.longitude
+                _viewModel.reminderSelectedLocationStr.value = fromLocation[0].locality
+                _viewModel.navigationCommand.value = NavigationCommand.Back
+
+            }
+
+            // I want to then show a toast if no point clicked on the map.
 
         }
 
     }
+
+
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -169,11 +206,11 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
             PackageManager.PERMISSION_GRANTED) {
             map.isMyLocationEnabled = true
+
         }
 
         else {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
+            this.requestPermissions(
                 arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION),
                 REQUEST_LOCATION_PERMISSION
             )
@@ -191,22 +228,21 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         // Check if location permissions are granted and if so enable the
         // location data layer.
+        isLocationPermissionGranted = false
         if (requestCode == REQUEST_LOCATION_PERMISSION) {
             if (grantResults.isNotEmpty() && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                isLocationPermissionGranted = true
                 enableMyLocation()
             }
+        } else {
+            _viewModel.showSnackBar.postValue(getString(R.string.permission_denied_explanation))
         }
     }
 
-
     private fun setPoiClick (map : GoogleMap) {
-
         map.setOnPoiClickListener {pointOfInterest ->
             map.clear()
-
             poi = pointOfInterest
-//            Log.i("PIONTTTT", "$poi")
-//            Log.i("SWWWWWWW", "${pointOfInterest.latLng}")
             val poiMaker = map.addMarker(
                 MarkerOptions().position(pointOfInterest.latLng)
                     .title(pointOfInterest.name)
@@ -220,26 +256,77 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     /**
      * Set long click on map
      * */
-    private fun setMapLongClick (map : GoogleMap) {
+//    private fun setMapLongClick (map : GoogleMap) {
+//
+//        map.setOnMapLongClickListener { latLng ->
+//
+//            val snippet = String.format(
+//                Locale.getDefault(),
+//                "Lat : %1$.5f, Long: %2$.5f",
+//                latLng.latitude,
+//                latLng.longitude
+//            )
+////            map.clear()
+//            map.addMarker(
+//                MarkerOptions().position(latLng)
+//                    .title(getString(R.string.dropped_pin))
+//                    .snippet(snippet)
+//                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+//            )
+//
+//            //addCircle(latLng, GEOFENCE_RADIUS)
+//        }
+//    }
 
-        map.setOnMapLongClickListener { latLng ->
 
-            val snippet = String.format(
-                Locale.getDefault(),
-                "Lat : %1$.5f, Long: %2$.5f",
-                latLng.latitude,
-                latLng.longitude
-            )
-//            map.clear()
-            map.addMarker(
-                MarkerOptions().position(latLng)
-                    .title(getString(R.string.dropped_pin))
-                    .snippet(snippet)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
-            )
+    /**
+     * Get user current location
+     * */
+    @SuppressLint("MissingPermission")
+    private fun getUserLocation () {
 
-            //addCircle(latLng, GEOFENCE_RADIUS)
-        }
+        // get user location using [FusedLocationClientProvider Api]
+
+        Log.i("CHECK_GRANTED", "$isLocationPermissionGranted")
+
+//        if (isLocationPermissionGranted) {
+
+            try {
+                val locationResult = fusedLocationProviderClient.lastLocation
+                locationResult.addOnCompleteListener(requireActivity()) {locationTask ->
+
+                    if (locationTask.isSuccessful) {
+
+                        lastKnownLocation = locationTask.result
+
+                        if (lastKnownLocation != null) {
+                            map.moveCamera(
+                                    CameraUpdateFactory.newLatLngZoom(
+                                            LatLng(
+                                                    lastKnownLocation!!.latitude,
+                                                    lastKnownLocation!!.longitude
+                                            ), zoomLevel
+                                    )
+                            )
+                        }
+                    } else {
+                        Log.e( "Exception: %s", "${locationTask.exception}")
+
+                        map.moveCamera(
+                                CameraUpdateFactory
+                                        .newLatLngZoom(defaultLocation, zoomLevel)
+                        )
+                        map.uiSettings.isMyLocationButtonEnabled = false
+                    }
+                }
+            }  catch (e: SecurityException) {
+                Log.e("Exception: %s","${ e.message}")
+            }
+
+
+
+     //   }
+
     }
 
 /**
