@@ -129,11 +129,11 @@ class RemindersActivityTest :
 
     @Test
     fun editTask () = runBlocking {
-
-        var reminder = ReminderDTO("Title", "Description",
-                "Location", 6.454202, 3.599068
-        )
-        repository.saveReminder(reminder)
+//
+//        var reminder = ReminderDTO("Title", "Description",
+//                "Location", 6.454202, 3.599068
+//        )
+//        repository.saveReminder(reminder)
 
         // Start up reminder screen
         val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
@@ -141,35 +141,31 @@ class RemindersActivityTest :
 
       //  dataBindingIdlingResource.monitorActivity(activityScenario)
 
+        // 1
         onView(withId(R.id.addReminderFAB)).perform(click())
+
+        onView(withId(R.id.saveReminder)).perform(click())
+
+        onView(withId(com.google.android.material.R.id.snackbar_text))
+                .check(matches(withText(R.string.err_enter_title)))
 
         onView(withId(R.id.reminderTitle)).perform(typeText("Title"))
         onView(withId(R.id.reminderDescription)).perform(typeText("Description"))
         onView(withId(R.id.selectLocation)).perform(click())
-
         onView(withId(R.id.map)).perform(longClick())
 
-        onView(withId(R.id.position_click)).perform(longClick())
-
-//       Espresso.pressBack()
-
-       onView(withId(R.id.saveReminder)).perform(click())
-
+         onView(withId(R.id.saveReminder)).perform(longClick())
 
         onView(withText("Title")).check(matches(isDisplayed()))
         onView(withText("Description")).check(matches(isDisplayed()))
 
         onView(withText(R.string.reminder_saved)).inRoot(withDecorView(not(getActivity(activityScenario)!!.window.decorView))).check(matches(isDisplayed()))
 
-//
-//        onView(withText(R.string.reminder_saved)).inRoot(withDecorView(not(`is`(getActivity(activityScenario)?.window?.decorView)))).check(matches(isDisplayed()))
-////
-        onView(withId(com.google.android.material.R.id.snackbar_text))
-                .check(matches(withText(R.string.err_enter_title)))
 
 
-        onView(withId(com.google.android.material.R.id.snackbar_text))
-                .check(matches(withText(R.string.err_select_location)))
+
+//        onView(withId(com.google.android.material.R.id.snackbar_text))
+//                .check(matches(withText(R.string.err_select_location)))
 //
 
         //close the activity before resetting the db

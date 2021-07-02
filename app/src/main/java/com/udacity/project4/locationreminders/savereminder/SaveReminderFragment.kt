@@ -109,7 +109,11 @@ class SaveReminderFragment : BaseFragment() {
             /**
              * Only save reminder to local database only when geofence is successful
              * */
-            addGeoFenceForRemainder()
+
+               //addGeoFenceForRemainder()
+            if (_viewModel.validateAndSaveReminder(reminderData)) {
+                checkPermissionsAndStartGeofencing()
+            }
 
         }
 
@@ -322,7 +326,7 @@ class SaveReminderFragment : BaseFragment() {
 
                             addOnSuccessListener {
                               //  Log.i("ADDDEDDD", "Geofence added with id ${currentGeoFenceData.id}")
-                                _viewModel.validateAndSaveReminder(reminderData)
+                              // _viewModel.validateAndSaveReminder(reminderData)
                             }
 
                             addOnFailureListener {
