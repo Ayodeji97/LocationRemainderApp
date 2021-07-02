@@ -155,8 +155,8 @@ class RemindersActivityTest :
         onView(withId(R.id.selectLocation)).perform(click())
         onView(withId(R.id.map)).perform(longClick())
 
-        //onView(withId(R.id.position_click)).perform(click())
-       // Espresso.pressBack()
+       onView(withId(R.id.position_click)).perform(click())
+       //Espresso.pressBack()
 
 
          onView(withId(R.id.saveReminder)).perform(click())

@@ -110,7 +110,10 @@ class SaveReminderFragment : BaseFragment() {
              * Only save reminder to local database only when geofence is successful
              * */
 
-               addGeoFenceForRemainder()
+            if (_viewModel.validateEnteredData(reminderData)) {
+                addGeoFenceForRemainder()
+            }
+
 
 
         }
