@@ -47,7 +47,8 @@ private const val BACKGROUND_LOCATION_PERMISSION_INDEX = 1
 
 class SaveReminderFragment : BaseFragment() {
     //Get the view model this time as a single to be shared with the another fragment
-    override val _viewModel: SaveReminderViewModel by sharedViewModel()
+    //override val _viewModel: SaveReminderViewModel by inject()
+   override val _viewModel: SaveReminderViewModel by sharedViewModel()
     private lateinit var binding: FragmentSaveReminderBinding
     private lateinit var geofencingClient: GeofencingClient
     private lateinit var reminderData: ReminderDataItem
@@ -139,6 +140,12 @@ class SaveReminderFragment : BaseFragment() {
                     true
                 }
         return foregroundLocationApproved && backgroundPermissionApproved
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        requestForegroundAndBackgroundLocationPermissions()
     }
 
 

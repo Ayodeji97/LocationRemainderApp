@@ -40,6 +40,7 @@ import java.util.*
 class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
     //Use Koin to get the view model of the SaveReminder
+   // override val _viewModel: SaveReminderViewModel by inject()
     override val _viewModel: SaveReminderViewModel by sharedViewModel()
     private lateinit var binding: FragmentSelectLocationBinding
 
@@ -152,6 +153,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnM
                 _viewModel.navigationCommand.value = NavigationCommand.Back
 
             }
+
             else {
                 _viewModel.latitude.value = latLng.latitude
                 _viewModel.longitude.value = latLng.longitude
@@ -228,13 +230,10 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnM
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         // Check if location permissions are granted and if so enable the
         // location data layer.
-        isLocationPermissionGranted = false
-        if (requestCode == REQUEST_LOCATION_PERMISSION) {
             if (grantResults.isNotEmpty() && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                isLocationPermissionGranted = true
                 enableMyLocation()
-            }
-        } else {
+            } else {
+
             _viewModel.showSnackBar.postValue(getString(R.string.permission_denied_explanation))
         }
     }
@@ -316,7 +315,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnM
                                 CameraUpdateFactory
                                         .newLatLngZoom(defaultLocation, zoomLevel)
                         )
-                        map.uiSettings.isMyLocationButtonEnabled = false
+                        map.uiSettings.isMyLocationButtonEnabled = true
                     }
                 }
             }  catch (e: SecurityException) {
