@@ -137,21 +137,6 @@ class RemindersLocalRepositoryTest {
 
 
 
-//    @Test
-//    fun check_error_message_when_unable_to_getReminder () = runBlocking {
-//
-//        val emptyId = ""
-//        val reminder = ReminderDTO("title", "description", "location", 6.454202, 3.599068)
-//
-//        database.reminderDao().saveReminder(reminder)
-//        val result = remindersLocalRepository.getReminder(reminder.id)
-//
-//        result as Result.Error
-//
-//        assertThat(result.message, `is` ("Reminder not found!"))
-//
-//    }
-
 
 
 
