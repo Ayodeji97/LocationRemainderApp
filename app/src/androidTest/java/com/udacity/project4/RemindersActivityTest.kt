@@ -146,6 +146,7 @@ class RemindersActivityTest :
 
         onView(withId(R.id.saveReminder)).perform(click())
 
+//        Test for snack bar
         onView(withId(com.google.android.material.R.id.snackbar_text))
                 .check(matches(withText(R.string.err_enter_title)))
 
@@ -164,6 +165,7 @@ class RemindersActivityTest :
         onView(withText("Title")).check(matches(isDisplayed()))
         onView(withText("Description")).check(matches(isDisplayed()))
 
+//        Test for toast
         onView(withText(R.string.reminder_saved)).inRoot(withDecorView(not(getActivity(activityScenario)!!.window.decorView))).check(matches(isDisplayed()))
 
 

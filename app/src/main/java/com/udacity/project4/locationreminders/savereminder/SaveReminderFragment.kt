@@ -111,7 +111,7 @@ class SaveReminderFragment : BaseFragment() {
              * */
 
             if (_viewModel.validateEnteredData(reminderData)) {
-                addGeoFenceForRemainder()
+                checkPermissionsAndStartGeofencing()
             }
 
 
@@ -168,10 +168,10 @@ class SaveReminderFragment : BaseFragment() {
         )
     } // make changes to
 
-    override fun onStart() {
-        super.onStart()
-        checkPermissionsAndStartGeofencing()
-    }
+//    override fun onStart() {
+//        super.onStart()
+//        checkPermissionsAndStartGeofencing()
+//    }
 
     private fun checkPermissionsAndStartGeofencing() {
 
