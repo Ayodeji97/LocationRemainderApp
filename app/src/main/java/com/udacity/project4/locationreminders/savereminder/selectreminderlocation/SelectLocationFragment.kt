@@ -159,7 +159,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnM
 
             }
 
-            // I want to then show a toast if no point clicked on the map.
 
         }
 

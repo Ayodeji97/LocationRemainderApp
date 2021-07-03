@@ -35,6 +35,16 @@ class RemindersLocalRepositoryTest {
     var instantExecutorRule = InstantTaskExecutorRule()
 
 
+    private fun getReminder(): ReminderDTO {
+        return ReminderDTO(
+                title = "title",
+                description = "desc",
+                location = "loc",
+                latitude = 47.5456551,
+                longitude = 122.0101731)
+    }
+
+
     @Before
     fun setup() {
 
@@ -64,20 +74,6 @@ class RemindersLocalRepositoryTest {
         assertThat(getReminder, `is`(notNullValue()))
     }
 
-    @Test
-    fun check_error_message_when_unable_to_getReminder () = runBlocking {
-
-        val emptyId = ""
-        val reminder = ReminderDTO("title", "description", "location", 6.454202, 3.599068)
-
-        database.reminderDao().saveReminder(reminder)
-        val result = remindersLocalRepository.getReminder(reminder.id)
-
-        result as Result.Error
-
-      assertThat(result.message, `is` ("Reminder not found!"))
-
-    }
 
 
 
@@ -100,6 +96,61 @@ class RemindersLocalRepositoryTest {
         assertThat(getReminder, `is` (emptyList()))
 
     }
+
+
+    @Test
+    fun deleteAllReminders_getReminderById() = runBlocking {
+        val reminder = ReminderDTO("title", "description", "location", 6.454202, 3.599068)
+        remindersLocalRepository.saveReminder(reminder)
+        remindersLocalRepository.deleteAllReminders()
+
+        val result = remindersLocalRepository.getReminder(reminder.id)
+
+
+        assertThat(result is Result.Error, `is`(true))
+        result as Result.Error
+        assertThat(result.message, `is`("Reminder not found!"))
+
+    }
+
+    @Test
+    fun saveReminder_retrievesReminder() = runBlocking {
+        // GIVEN - A new reminder saved in the database.
+        val reminder = getReminder()
+        remindersLocalRepository.saveReminder(reminder)
+
+        // WHEN  - reminder retrieved by ID.
+        val result = remindersLocalRepository.getReminder(reminder.id)
+
+        // THEN - Same reminder is returned.
+        assertThat(result is Result.Success, `is`(true))
+        result as Result.Success
+
+
+        assertThat(result.data.title, `is`(reminder.title))
+        assertThat(result.data.description, `is`(reminder.description))
+        assertThat(result.data.latitude, `is`(reminder.latitude))
+        assertThat(result.data.longitude, `is`(reminder.longitude))
+        assertThat(result.data.location, `is`(reminder.location))
+    }
+
+
+
+
+//    @Test
+//    fun check_error_message_when_unable_to_getReminder () = runBlocking {
+//
+//        val emptyId = ""
+//        val reminder = ReminderDTO("title", "description", "location", 6.454202, 3.599068)
+//
+//        database.reminderDao().saveReminder(reminder)
+//        val result = remindersLocalRepository.getReminder(reminder.id)
+//
+//        result as Result.Error
+//
+//        assertThat(result.message, `is` ("Reminder not found!"))
+//
+//    }
 
 
 
