@@ -50,20 +50,15 @@ _Instruction to run the project_
 <p float="left">
   <img src="app/src/main/res/drawable/sign_up.png" width="150" />
   <img src="app/src/main/res/drawable/email_input.png" width="150" />
-  <img src="app/src/main/res/drawable/password_input.png" width="150" />
- 
-
-
+  <img src="app/src/main/res/drawable/empty_screen.png" width="150" />
 
 </p>
 
 <p float="left">
-   <img src="app/src/main/res/drawable/empty_screen.png" width="150" />
     <img src="app/src/main/res/drawable/task_title.png" width="150" />
    <img src="app/src/main/res/drawable/permission.png" width="150" />
+     <img src="app/src/main/res/drawable/map_view.png" width="150" />
  
-
-
 </p>
 
 
