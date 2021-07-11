@@ -2,7 +2,7 @@
 
 Reminder App is a location task based application that display a list of location task and a geofence activation based on task location.
 
-_This is a custom application in request from Udacity Android Nanodegree Programme._
+_This is a custom application built and reviewed by Udacity Android Nanodegree Programme expert._
 
 ## Feature
 * Kotlin Coroutine for async operations
