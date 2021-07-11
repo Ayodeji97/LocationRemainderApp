@@ -25,7 +25,10 @@ _Instruction to run the project_
     - [Here](https://developer.android.com/studio) is the link to download the lastest version of android studio
 * Clone the project repository by running the following command line on a terminal
 
-    ```https://github.com/Ayodeji97/Reminder.git```
+    ```
+    https://github.com/Ayodeji97/Reminder.git
+    
+    ```
     
 * Open project in android studio by clicking of File -> New -> Import project and choose the downloaded project
 * Run the app
